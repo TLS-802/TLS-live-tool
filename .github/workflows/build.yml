@@ -1,6 +1,7 @@
+---
 name: Build
 
-on:
+'on':
   push:
     branches:
       - main
@@ -35,9 +36,7 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: release-artifact-${{ matrix.os }}
+          name: build-${{ matrix.os }}
           path: |
-            release/*/*.exe
-            release/*/*.dmg
-            release/*/*.blockmap
-            release/*/latest*.yml
+            release/**/*
+          retention-days: 7

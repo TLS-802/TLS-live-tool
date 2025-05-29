@@ -1,7 +1,6 @@
----
 name: Release
 
-'on':
+on:
   push:
     tags:
       - 'v*'
@@ -36,17 +35,32 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: release-${{ matrix.os }}
+          name: release-tls-${{ matrix.os }}
           path: |
-            release/**/*
-          retention-days: 1
+            release/*/*.exe
+            release/*/*.dmg
+            release/*/*.blockmap
+            release/*/latest*.yml
 
   release:
     needs: build
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Download Windows build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-tls-windows-latest
+          path: release/windows
+
+      - name: Download macOS build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-tls-macos-latest
+          path: release/macos
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -61,18 +75,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Download Windows artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: release-windows-latest
-          path: release-windows
-
-      - name: Download macOS artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: release-macos-latest
-          path: release-macos
-
       - name: Extract changelog
         id: changelog
         run: |
@@ -86,9 +88,8 @@ jobs:
           name: Release ${{ github.ref_name }}
           body: ${{ steps.changelog.outputs.notes }}
           files: |
-            release-windows/**/*
-            release-macos/**/*
+            release/windows/*
+            release/macos/*
           draft: false
-          fail_on_unmatched_files: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
