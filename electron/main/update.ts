@@ -491,7 +491,7 @@ function startDownload(
 export async function getLatestVersion() {
   // 从 package.json 获取最新版本号
   const version = await fetch(
-    'https://fastly.jsdelivr.net/gh/TLS-802/TLS-live-tool@main/package.json',
+    'https://raw.githubusercontent.com/TLS-802/TLS-live-tool/main/package.json',
   )
     .then(resp => resp.json())
     .then(data => data.version)
