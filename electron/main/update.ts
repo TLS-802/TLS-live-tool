@@ -14,7 +14,8 @@ import type {
 
 import { IPC_CHANNELS } from 'shared/ipcChannels'
 import { createLogger } from './logger'
-import { fetchChangelog, typedIpcMainHandle } from './utils'
+import { typedIpcMainHandle } from './utils'
+import { fetchChangelog } from './utils/changelog'
 
 const execAsync = promisify(exec)
 
